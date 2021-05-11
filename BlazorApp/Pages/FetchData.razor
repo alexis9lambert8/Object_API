@@ -1,0 +1,114 @@
+﻿@page "/fetchdata"
+
+@using Microsoft.Extensions.Logging
+@using ObjectsApi.Services
+@using ObjectsApi.Models
+@using System.ComponentModel.DataAnnotations
+@inject AlarmService AlarmService
+@inject ILogger<FetchData> Logger
+
+<h1>Alarm Maker</h1>
+
+<button class="btn btn-primary" @onclick="RequestAlarm">Make An Alarm</button>
+
+<div hidden="@alarmViewShown">
+    <EditForm Model="@alarm" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <InputText id="name" @bind-Value="alarm.Name" /><br />
+        <InputCheckbox id="active" @bind-Value="alarm.Active" /><br />
+        <InputNumber id="alarmType" @bind-Value="alarm.AlarmType" /><br />
+        <button class="btn btn-primary" @onclick="ShowAffectedEquipment">Add Affected Equipment</button><br />
+        <p hidden="@affectedEquipmentShown">
+            <table class="table">
+                <thead>
+                    <tr>AffectedEquipment</tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < affectedEquipmentOptions.Count; i++)
+                    {
+                        <tr>
+                            <td><InputCheckbox id=@affectedEquipmentOptions[i].Name @bind-Value=@affectedEquipments[i] /></td>
+                            <td>@affectedEquipmentOptions[i].Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </p>
+        <button type="submit">Submit</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment<BaseObject> RowTemplate { get; set; }
+
+    private Alarm alarm;
+    private bool affectedEquipmentShown;
+    private bool alarmViewShown;
+    private List<BaseObject> affectedEquipmentOptions = new List<BaseObject>();
+    private List<bool> affectedEquipments = new List<bool>();
+
+    private void RequestAlarm()
+    {
+        alarm = new Alarm();
+        alarmViewShown = true;
+    }
+
+    private void HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        // Process the valid form
+        AlarmService.Create(alarm);
+    }
+
+    private void ShowAffectedEquipment()
+    {
+        affectedEquipmentShown = !affectedEquipmentShown;
+        //affectedEquipmentOptions = EquipmentService.Get();
+    }
+}
+<h1>Alarms</h1>
+
+@if (alarms == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Active</th>
+                <th>Alarm Type</th>
+                <th>Affected Equipment</th>
+                <th>Time of Failure</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var alarm in alarms)
+            {
+                <tr>
+                    <td>@alarm.Name</td>
+                    <td>@alarm.Active</td>
+                    <td>@alarm.AlarmType</td>
+                    <td>@alarm.AffectedEquipment</td>
+                    <td>@alarm.TimeOfFailure.GetDateTimeFormats().FirstOrDefault()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Alarm> alarms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        alarms = AlarmService.Get();
+        await Task.Yield();
+    }
+}
