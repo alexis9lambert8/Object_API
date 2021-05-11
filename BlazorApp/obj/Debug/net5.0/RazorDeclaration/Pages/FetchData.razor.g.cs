@@ -13,98 +13,98 @@ namespace BlazorApp.Pages
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 1 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 2 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 3 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 4 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 5 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 6 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 7 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 8 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 9 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using BlazorApp;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\_Imports.razor"
+#line 10 "D:\Users\asus\Desktop\Object_API\BlazorApp\_Imports.razor"
 using BlazorApp.Shared;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\Pages\FetchData.razor"
+#line 3 "D:\Users\asus\Desktop\Object_API\BlazorApp\Pages\FetchData.razor"
 using Microsoft.Extensions.Logging;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\Pages\FetchData.razor"
+#line 4 "D:\Users\asus\Desktop\Object_API\BlazorApp\Pages\FetchData.razor"
 using ObjectsApi.Services;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\Pages\FetchData.razor"
+#line 5 "D:\Users\asus\Desktop\Object_API\BlazorApp\Pages\FetchData.razor"
 using ObjectsApi.Models;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\Pages\FetchData.razor"
+#line 6 "D:\Users\asus\Desktop\Object_API\BlazorApp\Pages\FetchData.razor"
 using System.ComponentModel.DataAnnotations;
 
 #line default
@@ -119,29 +119,41 @@ using System.ComponentModel.DataAnnotations;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 43 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\Pages\FetchData.razor"
+#line 46 "D:\Users\asus\Desktop\Object_API\BlazorApp\Pages\FetchData.razor"
        
     [Parameter]
     public RenderFragment<BaseObject> RowTemplate { get; set; }
 
-    private Alarm alarm;
-    private bool affectedEquipmentShown;
-    private bool alarmViewShown;
+    private Alarm alarm = new Alarm();
+    private bool affectedEquipmentShown = true;
+    private bool alarmViewShown = true;
+    private bool validSubmission = true;
     private List<BaseObject> affectedEquipmentOptions = new List<BaseObject>();
     private List<bool> affectedEquipments = new List<bool>();
 
     private void RequestAlarm()
     {
-        alarm = new Alarm();
-        alarmViewShown = true;
+        alarmViewShown = !alarmViewShown;
     }
 
     private void HandleValidSubmit()
     {
         Logger.LogInformation("HandleValidSubmit called");
+        validSubmission = true;
+        alarmViewShown = true;
 
         // Process the valid form
+        alarm.Id = Guid.NewGuid().ToString();
+        alarm.Type = "Alarm";
+        alarm.TimeOfFailure = DateTime.Now;
         AlarmService.Create(alarm);
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        validSubmission = false;
     }
 
     private void ShowAffectedEquipment()
@@ -154,14 +166,14 @@ using System.ComponentModel.DataAnnotations;
 #line hidden
 #nullable disable
 #nullable restore
-#line 106 "C:\Users\e387641\Documents\New Unity Project\BlazorApp\Pages\FetchData.razor"
+#line 125 "D:\Users\asus\Desktop\Object_API\BlazorApp\Pages\FetchData.razor"
        
     private List<Alarm> alarms;
 
     protected override async Task OnInitializedAsync()
     {
+        AlarmService = new AlarmService();
         alarms = AlarmService.Get();
-        await Task.Yield();
     }
 
 #line default

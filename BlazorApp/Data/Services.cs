@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MongoDB.Driver;
 using ObjectsApi.Models;
 
@@ -12,20 +13,27 @@ namespace ObjectsApi.Services
 
         public AlarmService()
         {
-            var client = new MongoClient(ObjectDatabaseSettings.ConnectionString);
-            var database = client.GetDatabase(ObjectDatabaseSettings.DatabaseName);
+            try
+            {
+                var client = new MongoClient(ObjectDatabaseSettings.ConnectionString);
+                var database = client.GetDatabase(ObjectDatabaseSettings.DatabaseName);
 
-            Console.WriteLine("The list of databases on this server is: ");
-            Console.WriteLine(database);
+                Console.WriteLine("The list of databases on this server is: ");
+                Console.WriteLine(database);
 
-            _alarms = database.GetCollection<Alarm>(ObjectDatabaseSettings.AlarmCollectionName);
+                _alarms = database.GetCollection<Alarm>(ObjectDatabaseSettings.AlarmCollectionName);
 
-            var collection = database.GetCollection<BaseObject>(ObjectDatabaseSettings.AlarmCollectionName);
-            _alarms = collection.OfType<Alarm>();
+                var collection = database.GetCollection<BaseObject>(ObjectDatabaseSettings.AlarmCollectionName);
+                _alarms = collection.OfType<Alarm>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public List<Alarm> Get() =>
-            _alarms.Find(obj => obj.Type == "Alarm").ToList();
+            _alarms.Find(x => x.Type == "Alarm").ToList();
 
         public Alarm Get(string id) =>
             _alarms.Find<Alarm>(alarm => alarm.Id == id).FirstOrDefault();

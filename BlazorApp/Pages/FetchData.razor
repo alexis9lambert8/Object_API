@@ -10,20 +10,20 @@
 <h1>Alarm Maker</h1>
 
 <button class="btn btn-primary" @onclick="RequestAlarm">Make An Alarm</button>
-
+<br /><br />
 <div hidden="@alarmViewShown">
-    <EditForm Model="@alarm" OnValidSubmit="@HandleValidSubmit">
+    <EditForm Model="@alarm" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <InputText id="name" @bind-Value="alarm.Name" /><br />
-        <InputCheckbox id="active" @bind-Value="alarm.Active" /><br />
-        <InputNumber id="alarmType" @bind-Value="alarm.AlarmType" /><br />
-        <button class="btn btn-primary" @onclick="ShowAffectedEquipment">Add Affected Equipment</button><br />
+        Alarm Name: <InputText id="name" @bind-Value="alarm.Name" /><br />
+        Alarm Is Active: <InputCheckbox id="active" @bind-Value="alarm.Active" /><br />
+        Alarm Type (integer): <InputNumber id="alarmType" @bind-Value="alarm.AlarmType" /><br /><br />
+        <button type="button" @onclick="ShowAffectedEquipment">Add Affected Equipment</button><br /><br />
         <p hidden="@affectedEquipmentShown">
             <table class="table">
                 <thead>
-                    <tr>AffectedEquipment</tr>
+                    <tr>Affected Equipment Options</tr>
                 </thead>
                 <tbody>
                     @for (int i = 0; i < affectedEquipmentOptions.Count; i++)
@@ -35,8 +35,11 @@
                     }
                 </tbody>
             </table>
+        </p><br />
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <p hidden ="@validSubmission">
+            Please fill out all form options.
         </p>
-        <button type="submit">Submit</button>
     </EditForm>
 </div>
 
@@ -44,24 +47,36 @@
     [Parameter]
     public RenderFragment<BaseObject> RowTemplate { get; set; }
 
-    private Alarm alarm;
-    private bool affectedEquipmentShown;
-    private bool alarmViewShown;
+    private Alarm alarm = new Alarm();
+    private bool affectedEquipmentShown = true;
+    private bool alarmViewShown = true;
+    private bool validSubmission = true;
     private List<BaseObject> affectedEquipmentOptions = new List<BaseObject>();
     private List<bool> affectedEquipments = new List<bool>();
 
     private void RequestAlarm()
     {
-        alarm = new Alarm();
-        alarmViewShown = true;
+        alarmViewShown = !alarmViewShown;
     }
 
     private void HandleValidSubmit()
     {
         Logger.LogInformation("HandleValidSubmit called");
+        validSubmission = true;
+        alarmViewShown = true;
 
         // Process the valid form
+        alarm.Id = Guid.NewGuid().ToString();
+        alarm.Type = "Alarm";
+        alarm.TimeOfFailure = DateTime.Now;
         AlarmService.Create(alarm);
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        validSubmission = false;
     }
 
     private void ShowAffectedEquipment()
@@ -78,29 +93,33 @@
 }
 else
 {
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Active</th>
+            <th>Alarm Type</th>
+            <th>Affected Equipment</th>
+            <th>Time of Failure</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var alarm in alarms)
+        {
             <tr>
-                <th>Name</th>
-                <th>Active</th>
-                <th>Alarm Type</th>
-                <th>Affected Equipment</th>
-                <th>Time of Failure</th>
+                <td>@alarm.Name</td>
+                <td>@alarm.Active</td>
+                <td>@alarm.AlarmType</td>
+                <td>@((alarm.AffectedEquipment != null).ToString())</td>
+                <td>@alarm.TimeOfFailure</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var alarm in alarms)
-            {
-                <tr>
-                    <td>@alarm.Name</td>
-                    <td>@alarm.Active</td>
-                    <td>@alarm.AlarmType</td>
-                    <td>@alarm.AffectedEquipment</td>
-                    <td>@alarm.TimeOfFailure.GetDateTimeFormats().FirstOrDefault()</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+
+<p>
+    There are @alarms.Count alarms available. 
+</p>
 }
 
 @code {
@@ -108,7 +127,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        AlarmService = new AlarmService();
         alarms = AlarmService.Get();
-        await Task.Yield();
     }
 }

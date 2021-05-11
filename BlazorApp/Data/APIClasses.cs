@@ -99,7 +99,7 @@ namespace ObjectsApi.Models
     public static class ObjectDatabaseSettings
     {
         public static string AlarmCollectionName { get; set; } = "Object_API";
-        public static string ConnectionString { get; set; } = "mongodb+srv://defaultUser:9pickles8@cluster0.kgp0x.mongodb.net/Object_API?w=majority";
+        public static string ConnectionString { get; set; } = "mongodb+srv://defaultUser:defaultPassword@cluster0.kgp0x.mongodb.net/Object_API?w=majority";
         public static string DatabaseName { get; set; } = "Object_API";
     }
 

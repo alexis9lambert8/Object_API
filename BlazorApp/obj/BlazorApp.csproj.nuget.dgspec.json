@@ -1,25 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\e387641\\Documents\\New Unity Project\\BlazorApp\\BlazorApp.csproj": {}
+    "D:\\Users\\asus\\Desktop\\Object_API\\BlazorApp\\BlazorApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\e387641\\Documents\\New Unity Project\\BlazorApp\\BlazorApp.csproj": {
+    "D:\\Users\\asus\\Desktop\\Object_API\\BlazorApp\\BlazorApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\e387641\\Documents\\New Unity Project\\BlazorApp\\BlazorApp.csproj",
+        "projectUniqueName": "D:\\Users\\asus\\Desktop\\Object_API\\BlazorApp\\BlazorApp.csproj",
         "projectName": "BlazorApp",
-        "projectPath": "C:\\Users\\e387641\\Documents\\New Unity Project\\BlazorApp\\BlazorApp.csproj",
-        "packagesPath": "C:\\Users\\e387641\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\e387641\\Documents\\New Unity Project\\BlazorApp\\obj\\",
+        "projectPath": "D:\\Users\\asus\\Desktop\\Object_API\\BlazorApp\\BlazorApp.csproj",
+        "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
+        "outputPath": "D:\\Users\\asus\\Desktop\\Object_API\\BlazorApp\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\e387641\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -27,8 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://dal4tfs/DAL4HIPPO/_packaging/EmergentVisualization/nuget/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net5.0": {
