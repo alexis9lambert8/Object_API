@@ -1,0 +1,37 @@
+{
+  "Conveyer": {
+    "name": "string",
+    "connectedEquipment": "List<string>",
+    "active": "boolean",
+    "alarmId": "string",
+    "alarm": "Alarm"
+  },
+  "Tug": {
+    "name": "string",
+    "connectedEquipment": "List<string>",
+    "active": "boolean",
+    "alarmId": "string",
+    "alarm": "Alarm"
+  },
+  "Tank": {
+    "name": "string",
+    "connectedEquipment": "List<string>",
+    "active": "boolean",
+    "alarmId": "string",
+    "alarm": "Alarm"
+  },
+  "Door": {
+    "name": "string",
+    "connectedEquipment": "List<string>",
+    "active": "boolean",
+    "alarmId": "string",
+    "alarm": "Alarm"
+  },
+  "Alarm": {
+    "name": "string",
+    "affectedEquipment": "List<string>",
+    "active": "boolean",
+    "alarmType": "int",
+    "timeOfFailure": "date"
+  }
+}
